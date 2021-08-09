@@ -1,0 +1,35 @@
+
+#Menampilkan kolom nama brand, mengitung jumlah stok dengan id brand yang sama dan jumlah harga satuan dengan brang yang sama
+#dari tabel tbl_brand dan tbl_product
+#di kelompokan berdasarkan id_brand yang sama
+SELECT tbl_brand.name, SUM(tbl_product.stok) as stok, SUM(tbl_product.price) harga_satuan
+FROM tbl_product 
+INNER JOIN tbl_brand 
+ON tbl_product.brand_id = tbl_brand.brand_id 
+GROUP BY tbl_product.brand_id;
+
+#menampilkan semua data yang kategorynya bukan cellphone dan lahir dibawah 1990
+SELECT * 
+FROM tbl_order 
+INNER JOIN tbl_customer 
+ON tbl_order.customer_id = tbl_customer.customer_id 
+INNER JOIN tbl_product 
+ON tbl_order.product_id = tbl_product.product_id 
+INNER JOIN tbl_category 
+ON tbl_product.category_id = tbl_category.category_id 
+WHERE tbl_category.name != "Cellphone"
+AND tbl_customer.DOB <= '1990-00-00';
+
+#Menampilkan data urutan nama dari pembelian terbesar
+CREATE TEMPORARY TABLE groupinghargatotal 
+SELECT tbl_customer.name, SUM(tbl_order.qty * tbl_product.price) as harga_total 
+FROM tbl_order 
+INNER JOIN tbl_customer 
+ON tbl_order.customer_id = tbl_customer.customer_id 
+INNER JOIN tbl_product 
+ON tbl_order.product_id = tbl_product.product_id 
+GROUP BY tbl_order.customer_id, tbl_customer.name;
+
+SELECT name, harga_total 
+FROM groupinghargatotal 
+ORDER BY harga_total DESC;
